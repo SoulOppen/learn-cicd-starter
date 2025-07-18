@@ -6,16 +6,71 @@ import (
 	"testing"
 )
 
-func TestAuth(t *testing.T) {
-	originalKey := "secreto123"
-	req := httptest.NewRequest("GET", "/", nil)
-	req.Header.Set("Authorization", fmt.Sprintf("ApiKey %s", originalKey))
+package auth_test
 
-	answKey, err := GetAPIKey(req.Header)
-	if err != nil {
-		t.Fatalf("GetAPIKey devolvió un error inesperado: %v", err)
+import (
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"tu_modulo/auth" // reemplaza por el path real
+)
+
+func TestGetAPIKey(t *testing.T) {
+	casos := []struct {
+		nombre        string
+		headerValue   string
+		esperaError   bool
+		claveEsperada string
+	}{
+		{
+			nombre:        "Header válido",
+			headerValue:   "ApiKey secreto123",
+			esperaError:   false,
+			claveEsperada: "secreto123",
+		},
+		{
+			nombre:        "Header ausente",
+			headerValue:   "",
+			esperaError:   true,
+		},
+		{
+			nombre:        "Prefijo incorrecto",
+			headerValue:   "Bearer secreto123",
+			esperaError:   true,
+		},
+		{
+			nombre:        "Sin espacio entre prefijo y clave",
+			headerValue:   "ApiKeysecreto123",
+			esperaError:   true,
+		},
+		{
+			nombre:        "Demasiados tokens",
+			headerValue:   "ApiKey uno dos",
+			esperaError:   true,
+		},
 	}
-	if answKey != originalKey {
-		t.Errorf("La clave extraída fue '%s', pero se esperaba '%s'", answKey, originalKey)
+
+	for _, c := range casos {
+		t.Run(c.nombre, func(t *testing.T) {
+			req := httptest.NewRequest("GET", "/", nil)
+			if c.headerValue != "" {
+				req.Header.Set("Authorization", c.headerValue)
+			}
+
+			apiKey, err := auth.GetAPIKey(req.Header)
+
+			if c.esperaError && err == nil {
+				t.Fatalf("se esperaba un error pero no se recibió ninguno")
+			}
+			if !c.esperaError && err != nil {
+				t.Fatalf("no se esperaba error, pero se obtuvo: %v", err)
+			}
+			if !c.esperaError && apiKey != c.claveEsperada {
+				t.Errorf("se esperaba clave '%s', pero se obtuvo '%s'", c.claveEsperada, apiKey)
+			}
+		})
 	}
 }
+
