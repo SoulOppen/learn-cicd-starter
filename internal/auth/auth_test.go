@@ -1,20 +1,8 @@
 package auth
 
 import (
-	"fmt"
 	"net/http/httptest"
 	"testing"
-)
-
-package auth_test
-
-import (
-	"fmt"
-	"net/http"
-	"net/http/httptest"
-	"testing"
-
-	"tu_modulo/auth" // reemplaza por el path real
 )
 
 func TestGetAPIKey(t *testing.T) {
@@ -31,24 +19,24 @@ func TestGetAPIKey(t *testing.T) {
 			claveEsperada: "secreto123",
 		},
 		{
-			nombre:        "Header ausente",
-			headerValue:   "",
-			esperaError:   true,
+			nombre:      "Header ausente",
+			headerValue: "",
+			esperaError: true,
 		},
 		{
-			nombre:        "Prefijo incorrecto",
-			headerValue:   "Bearer secreto123",
-			esperaError:   true,
+			nombre:      "Prefijo incorrecto",
+			headerValue: "Bearer secreto123",
+			esperaError: true,
 		},
 		{
-			nombre:        "Sin espacio entre prefijo y clave",
-			headerValue:   "ApiKeysecreto123",
-			esperaError:   true,
+			nombre:      "Sin espacio entre prefijo y clave",
+			headerValue: "ApiKeysecreto123",
+			esperaError: true,
 		},
 		{
-			nombre:        "Demasiados tokens",
-			headerValue:   "ApiKey uno dos",
-			esperaError:   true,
+			nombre:      "Demasiados tokens",
+			headerValue: "ApiKey uno dos",
+			esperaError: true,
 		},
 	}
 
@@ -59,8 +47,7 @@ func TestGetAPIKey(t *testing.T) {
 				req.Header.Set("Authorization", c.headerValue)
 			}
 
-			apiKey, err := auth.GetAPIKey(req.Header)
-
+			apiKey, err := GetAPIKey(req.Header)
 			if c.esperaError && err == nil {
 				t.Fatalf("se esperaba un error pero no se recibió ninguno")
 			}
@@ -73,4 +60,3 @@ func TestGetAPIKey(t *testing.T) {
 		})
 	}
 }
-
