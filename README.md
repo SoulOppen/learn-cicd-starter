@@ -1,4 +1,4 @@
-[![CI Status](https://github.com/bootdotdev/learn-cicd-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/bootdotdev/learn-cicd-starter/actions/workflows/ci.yml)
+[![CI Status](https://github.com/SoulOppen/learn-cicd-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/bootdotdev/learn-cicd-starter/actions/workflows/ci.yml)
 
 # learn-cicd-starter (Notely)
 
