@@ -38,6 +38,7 @@ jobs:
         - name: Install goose
           run: go install github.com/pressly/goose/v3/cmd/goose@latest
         - name: Run DB migrations
-          run: goose -dir db/migrations sqlite3 '{{DATABASE_URL}}' up
+          run: goose -dir db/migrations sqlite3 "$DATABASE_URL" up
+
         - name: Deploy app
           run: ./scripts/deploy.sh
