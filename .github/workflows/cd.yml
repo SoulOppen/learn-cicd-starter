@@ -31,3 +31,6 @@ jobs:
 
         - name: 'Exec'
           run: 'gcloud builds submit --tag us-central1-docker.pkg.dev/boot-466423/notely-ar-repo/notely-api:latest'
+
+        - name: Deploy to Cloud Run
+          run: gcloud run deploy notely --image us-central1-docker.pkg.dev/boot-466423/notely-ar-repo/notely-api:latest --region us-central1 --allow-unauthenticated --project boot-466423 --max-instances=4
